@@ -84,3 +84,19 @@ const displayTransactions = function (transactions) {
 };
 
 displayTransactions(account1.transactions);
+
+// CREATE THE NICKNAME OF USER
+
+const arr = [];
+
+const createNicknames = function (accs) {
+  for (const acc of accs) {
+    acc.nickname = acc.userName
+      .toLowerCase()
+      .split(' ')
+      .map(word => word[0])
+      .join('');
+  }
+};
+
+createNicknames(accounts);
