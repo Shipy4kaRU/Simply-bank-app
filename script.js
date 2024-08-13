@@ -87,16 +87,30 @@ displayTransactions(account1.transactions);
 
 // CREATE THE NICKNAME OF USER
 
-const arr = [];
-
 const createNicknames = function (accs) {
-  for (const acc of accs) {
+  accs.forEach(function (acc) {
     acc.nickname = acc.userName
       .toLowerCase()
       .split(' ')
       .map(word => word[0])
       .join('');
-  }
+  });
 };
 
 createNicknames(accounts);
+
+// BALANCE
+
+const displayBalance = function (accs) {
+  accs.forEach(function (acc) {
+    acc.balance = acc.transactions.reduce((accum, trans) => {
+      return accum + trans;
+    }, 0);
+  });
+};
+
+displayBalance(accounts);
+
+//****************** TEMPORARY DISPLAY */
+
+labelBalance.textContent = `${account1.balance}$`;
