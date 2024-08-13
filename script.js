@@ -45,7 +45,7 @@ const labelDate = document.querySelector('.date');
 const labelBalance = document.querySelector('.balance__value');
 const labelSumIn = document.querySelector('.total__value--in');
 const labelSumOut = document.querySelector('.total__value--out');
-const labelSumInterest = document.querySelector('.total__value--interest');
+const labelSumPercent = document.querySelector('.total__value--interest');
 const labelTimer = document.querySelector('.timer');
 
 const containerApp = document.querySelector('.app');
@@ -65,6 +65,8 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// DISPLAY TRANSACTIONS
+
 const displayTransactions = function (transactions) {
   containerTransactions.innerHTML = '';
 
@@ -77,7 +79,7 @@ const displayTransactions = function (transactions) {
             ${index + 1} ${transType}
           </div>
           <div class="transactions__date">2 дня назад</div>
-          <div class="transactions__value">5 000$</div>
+          <div class="transactions__value">${trans}$</div>
         </div>`;
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
   });
@@ -101,16 +103,44 @@ createNicknames(accounts);
 
 // BALANCE
 
-const displayBalance = function (accs) {
-  accs.forEach(function (acc) {
-    acc.balance = acc.transactions.reduce((accum, trans) => {
-      return accum + trans;
-    }, 0);
-  });
+const displayBalance = function (acc) {
+  const balance = acc.transactions.reduce((accum, trans) => {
+    return accum + trans;
+  }, 0);
+  labelBalance.textContent = `${balance}$`;
 };
 
-displayBalance(accounts);
+displayBalance(account1);
 
-//****************** TEMPORARY DISPLAY */
+// DEPOSITS
 
-labelBalance.textContent = `${account1.balance}$`;
+const displayDeposit = function (acc) {
+  const totalDeposits = acc.transactions
+    .filter(trans => trans > 0)
+    .reduce((acc, trans) => acc + trans, 0);
+  labelSumIn.textContent = `${totalDeposits}$`;
+};
+
+displayDeposit(account1);
+
+// WITHDRAWS
+
+const displayWithdraws = function (acc) {
+  const totalWithdraws = acc.transactions
+    .filter(trans => trans < 0)
+    .reduce((acc, trans) => acc + Math.abs(trans), 0);
+  labelSumOut.textContent = `-${totalWithdraws}$`;
+};
+
+displayWithdraws(account1);
+
+// PERCENT
+
+const displayPercent = function (acc) {
+  const totalPercent = acc.transactions
+    .filter(trans => trans > 0)
+    .reduce((acc, trans) => (acc = acc + (trans * this.interest) / 100), 0);
+  labelSumPercent.textContent = `${totalPercent}$`;
+};
+
+displayPercent.call(account1, account1);
