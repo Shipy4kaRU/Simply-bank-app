@@ -105,10 +105,10 @@ createNicknames(accounts);
 // BALANCE
 
 const displayBalance = function (acc) {
-  const balance = acc.transactions.reduce((accum, trans) => {
+  acc.balance = acc.transactions.reduce((accum, trans) => {
     return accum + trans;
   }, 0);
-  labelBalance.textContent = `${balance}$`;
+  labelBalance.textContent = `${acc.balance}$`;
 };
 
 // DEPOSITS
@@ -143,15 +143,28 @@ const displayPercent = function (acc) {
   }$`;
 };
 
+// UPDATE USER UI
+
+const updateUserUI = function () {
+  //display total transactions
+  displayTransactions(currentUser.transactions);
+  // display balance
+  displayBalance(currentUser);
+  // display deposits, withdraws, percents
+  displayDeposit(currentUser);
+  displayWithdraws(currentUser);
+  displayPercent(currentUser);
+};
+
 // USERS LOG IN
 
 let currentUser;
 
 const logIn = function (e) {
   e.preventDefault();
-  let trimUserLogin = inputLoginUsername.value.trim();
-  let trimUserPin = Number(inputLoginPin.value.trim());
-  let logUser = accounts.find(account => account.nickname === trimUserLogin);
+  const trimUserLogin = inputLoginUsername.value.trim();
+  const trimUserPin = Number(inputLoginPin.value.trim());
+  const logUser = accounts.find(account => account.nickname === trimUserLogin);
   if (logUser?.pin === trimUserPin) {
     currentUser = logUser;
     // clear inputs
@@ -164,14 +177,7 @@ const logIn = function (e) {
     labelWelcome.textContent = `Рады, что вы снова с нами, ${
       currentUser.userName.split(' ')[0]
     }!`;
-    //display total transactions
-    displayTransactions(currentUser.transactions);
-    // display balance
-    displayBalance(currentUser);
-    // display deposits, withdraws, percents
-    displayDeposit(currentUser);
-    displayWithdraws(currentUser);
-    displayPercent(currentUser);
+    updateUserUI();
   } else {
     // clear inputs
     inputLoginUsername.value = '';
@@ -185,3 +191,28 @@ const logIn = function (e) {
 };
 
 btnLogin.addEventListener('click', logIn);
+
+// TRANSFERS
+
+const transferTo = function (e) {
+  e.preventDefault();
+  const trimTransferNicknameTo = inputTransferTo.value.trim();
+  const trimTransferAmount = Number(inputTransferAmount.value.trim());
+  const trimTransferAccountTo = accounts.find(
+    account => account.nickname === trimTransferNicknameTo
+  );
+  inputTransferTo.value = '';
+  inputTransferAmount.value = '';
+  if (
+    trimTransferAmount > 0 &&
+    trimTransferAmount <= currentUser.balance &&
+    trimTransferAccountTo &&
+    trimTransferAccountTo !== currentUser
+  ) {
+    currentUser.transactions.push(-trimTransferAmount);
+    trimTransferAccountTo.transactions.push(trimTransferAmount);
+    updateUserUI();
+  }
+};
+
+btnTransfer.addEventListener('click', transferTo);
