@@ -163,9 +163,9 @@ let currentUser;
 const logIn = function (e) {
   e.preventDefault();
   const trimUserLogin = inputLoginUsername.value.trim();
-  const trimUserPin = Number(inputLoginPin.value.trim());
+  const UserPin = Number(inputLoginPin.value);
   const logUser = accounts.find(account => account.nickname === trimUserLogin);
-  if (logUser?.pin === trimUserPin) {
+  if (logUser?.pin === UserPin) {
     currentUser = logUser;
     // clear inputs
     inputLoginUsername.value = '';
@@ -216,3 +216,26 @@ const transferTo = function (e) {
 };
 
 btnTransfer.addEventListener('click', transferTo);
+
+// DELETE ACCOUNT
+
+const closeAccount = function (e) {
+  e.preventDefault();
+  const trimCloseNickname = inputCloseUsername.value;
+  const trimClosePin = Number(inputClosePin.value.trim());
+  inputCloseUsername.value = '';
+  inputClosePin.value = '';
+  if (
+    trimCloseNickname === currentUser.nickname &&
+    trimClosePin === currentUser.pin
+  ) {
+    const closeIndexAccount = accounts.findIndex(
+      account => account.nickname === trimCloseNickname
+    );
+    accounts.splice(closeIndexAccount, 1);
+    labelWelcome.textContent = 'Войдите в свой аккаунт';
+    containerApp.style.opacity = '0';
+  }
+};
+
+btnClose.addEventListener('click', closeAccount);
