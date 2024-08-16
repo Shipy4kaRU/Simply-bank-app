@@ -88,8 +88,8 @@ nav {
   gap: 2rem;
 
   /* Create fade anumation */
-  /*opacity: 0;*/
-  transition: all 1s;
+  opacity: 0;
+  transition: all 1.2s;
 }
 
 .balance {

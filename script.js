@@ -67,9 +67,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 // DISPLAY TRANSACTIONS
 
-const displayTransactions = function (transactions) {
+const clearTrasaction = function () {
   containerTransactions.innerHTML = '';
+};
 
+const displayTransactions = function (transactions) {
+  clearTrasaction();
   transactions.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
 
@@ -84,8 +87,6 @@ const displayTransactions = function (transactions) {
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
   });
 };
-
-displayTransactions(account1.transactions);
 
 // CREATE THE NICKNAME OF USER
 
@@ -110,8 +111,6 @@ const displayBalance = function (acc) {
   labelBalance.textContent = `${balance}$`;
 };
 
-displayBalance(account1);
-
 // DEPOSITS
 
 const displayDeposit = function (acc) {
@@ -120,8 +119,6 @@ const displayDeposit = function (acc) {
     .reduce((acc, trans) => acc + trans, 0);
   labelSumIn.textContent = `${totalDeposits}$`;
 };
-
-displayDeposit(account1);
 
 // WITHDRAWS
 
@@ -132,15 +129,59 @@ const displayWithdraws = function (acc) {
   labelSumOut.textContent = `-${totalWithdraws}$`;
 };
 
-displayWithdraws(account1);
-
 // PERCENT
 
 const displayPercent = function (acc) {
   const totalPercent = acc.transactions
     .filter(trans => trans > 0)
-    .reduce((acc, trans) => (acc = acc + (trans * this.interest) / 100), 0);
-  labelSumPercent.textContent = `${totalPercent}$`;
+    .reduce(
+      (accum, trans) => (accum = accum + (trans * acc.interest) / 100),
+      0
+    );
+  labelSumPercent.textContent = `${
+    Math.round(totalPercent * Math.pow(10, 2)) / Math.pow(10, 2)
+  }$`;
 };
 
-displayPercent.call(account1, account1);
+// USERS LOG IN
+
+let currentUser;
+
+const logIn = function (e) {
+  e.preventDefault();
+  let trimUserLogin = inputLoginUsername.value.trim();
+  let trimUserPin = Number(inputLoginPin.value.trim());
+  let logUser = accounts.find(account => account.nickname === trimUserLogin);
+  if (logUser?.pin === trimUserPin) {
+    currentUser = logUser;
+    // clear inputs
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    inputLoginPin.blur();
+    // display UI
+    labelWelcome.style.color = '#444';
+    containerApp.style.opacity = '1';
+    labelWelcome.textContent = `Рады, что вы снова с нами, ${
+      currentUser.userName.split(' ')[0]
+    }!`;
+    //display total transactions
+    displayTransactions(currentUser.transactions);
+    // display balance
+    displayBalance(currentUser);
+    // display deposits, withdraws, percents
+    displayDeposit(currentUser);
+    displayWithdraws(currentUser);
+    displayPercent(currentUser);
+  } else {
+    // clear inputs
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    inputLoginPin.blur();
+    // display UI-error
+    labelWelcome.style.color = '#A0051C';
+    labelWelcome.textContent = 'Неверный логин и/или пароль!';
+    containerApp.style.opacity = '0';
+  }
+};
+
+btnLogin.addEventListener('click', logIn);
