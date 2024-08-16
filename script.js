@@ -71,9 +71,27 @@ const clearTrasaction = function () {
   containerTransactions.innerHTML = '';
 };
 
+// transactions sort by: -1: to Low, 0: No sort, 1: to Up
+
+let areSorted = 0;
+
 const displayTransactions = function (transactions) {
+  let transactionSortBy;
   clearTrasaction();
-  transactions.forEach(function (trans, index) {
+
+  switch (areSorted) {
+    case -1:
+      transactionSortBy = transactions.slice().sort((x, y) => x - y);
+      break;
+    case 0:
+      transactionSortBy = transactions;
+      break;
+    case 1:
+      transactionSortBy = transactions.slice().sort((x, y) => y - x);
+      break;
+  }
+
+  transactionSortBy.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
 
     const transactionRow = `
@@ -239,3 +257,29 @@ const closeAccount = function (e) {
 };
 
 btnClose.addEventListener('click', closeAccount);
+
+// ASK LOANS
+
+const askLoan = function (e) {
+  e.preventDefault();
+  const loanValue = Number(inputLoanAmount.value);
+  inputLoanAmount.value = '';
+  console.log(loanValue);
+  if (
+    loanValue > 0 &&
+    currentUser.transactions.some(transaction => transaction >= loanValue / 10)
+  ) {
+    currentUser.transactions.push(loanValue);
+    updateUserUI();
+  }
+};
+
+btnLoan.addEventListener('click', askLoan);
+
+//  SORT TRANSACTIONS BUTTON
+
+btnSort.addEventListener('click', function () {
+  areSorted >= 1 ? (areSorted = -1) : areSorted++;
+  console.log(areSorted);
+  displayTransactions(currentUser.transactions);
+});
