@@ -3,7 +3,7 @@
 
 ## Test data:
 - <strong>Account 1.</strong> Login: ci, pin: 1111  
-- Account 2. Login: as, pin: 2222  
-- Account 3. Login: cm, pin: 3333  
-- Account 4. Login: ks, pin: 4444  
-- Account 5. Login: oa, pin: 5555  
+- <strong>Account 2.</strong> Login: as, pin: 2222  
+- <strong>Account 3.</strong> Login: cm, pin: 3333  
+- <strong>Account 4.</strong> Login: ks, pin: 4444  
+- <strong>Account 5.</strong> Login: oa, pin: 5555  
