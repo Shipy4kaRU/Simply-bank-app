@@ -8,14 +8,14 @@ const account1 = {
   interest: 1.5,
   pin: 1111,
   transactionsDates: [
-    '2020-10-02T14:43:31.074Z',
-    '2020-10-29T11:24:19.761Z',
-    '2020-11-15T10:45:23.907Z',
-    '2021-01-22T12:17:46.255Z',
-    '2021-02-12T15:14:06.486Z',
-    '2021-03-09T11:42:26.371Z',
-    '2021-05-21T07:43:59.331Z',
-    '2021-06-22T15:21:20.814Z',
+    '2023-10-02T14:43:31.074Z',
+    '2023-10-29T11:24:19.761Z',
+    '2023-11-15T10:45:23.907Z',
+    '2024-01-22T12:17:46.255Z',
+    '2024-02-12T15:14:06.486Z',
+    '2024-07-12T11:42:26.371Z',
+    '2024-08-18T07:43:59.331Z',
+    '2024-08-19T15:2:20.814Z',
   ],
   currency: 'USD',
   locale: 'en-US',
@@ -27,14 +27,14 @@ const account2 = {
   interest: 1.3,
   pin: 2222,
   transactionsDates: [
-    '2020-10-02T14:43:31.074Z',
-    '2020-10-29T11:24:19.761Z',
-    '2020-11-15T10:45:23.907Z',
-    '2021-01-22T12:17:46.255Z',
-    '2021-02-12T15:14:06.486Z',
-    '2021-03-09T11:42:26.371Z',
-    '2021-05-21T07:43:59.331Z',
-    '2021-06-22T15:21:20.814Z',
+    '2023-10-02T14:43:31.074Z',
+    '2023-10-29T11:24:19.761Z',
+    '2023-11-15T10:45:23.907Z',
+    '2024-01-22T12:17:46.255Z',
+    '2024-02-12T15:14:06.486Z',
+    '2024-05-09T11:42:26.371Z',
+    '2024-08-13T07:43:59.331Z',
+    '2024-08-16T15:21:20.814Z',
   ],
   currency: 'UAH',
   locale: 'uk-UA',
@@ -46,14 +46,14 @@ const account3 = {
   interest: 0.8,
   pin: 3333,
   transactionsDates: [
-    '2020-10-02T14:43:31.074Z',
-    '2020-10-29T11:24:19.761Z',
-    '2020-11-15T10:45:23.907Z',
-    '2021-01-22T12:17:46.255Z',
-    '2021-02-12T15:14:06.486Z',
-    '2021-03-09T11:42:26.371Z',
-    '2021-05-21T07:43:59.331Z',
-    '2021-06-22T15:21:20.814Z',
+    '2023-10-02T14:43:31.074Z',
+    '2023-10-29T11:24:19.761Z',
+    '2023-11-15T10:45:23.907Z',
+    '2024-01-22T12:17:46.255Z',
+    '2024-05-12T15:14:06.486Z',
+    '2024-07-29T11:42:26.371Z',
+    '2024-08-12T07:43:59.331Z',
+    '2024-08-15T15:21:20.814Z',
   ],
   currency: 'RUB',
   locale: 'ru-RU',
@@ -65,11 +65,11 @@ const account4 = {
   interest: 1,
   pin: 4444,
   transactionsDates: [
-    '2020-10-02T14:43:31.074Z',
-    '2020-10-29T11:24:19.761Z',
-    '2020-11-15T10:45:23.907Z',
-    '2021-01-22T12:17:46.255Z',
-    '2021-02-12T15:14:06.486Z',
+    '2023-10-02T14:43:31.074Z',
+    '2023-10-29T11:24:19.761Z',
+    '2023-11-15T10:45:23.907Z',
+    '2024-01-22T12:17:46.255Z',
+    '2024-07-12T15:14:06.486Z',
   ],
   currency: 'EUR',
   locale: 'fr-CA',
@@ -81,11 +81,11 @@ const account5 = {
   interest: 1.1,
   pin: 5555,
   transactionsDates: [
-    '2020-10-02T14:43:31.074Z',
-    '2020-10-29T11:24:19.761Z',
-    '2020-11-15T10:45:23.907Z',
-    '2021-01-22T12:17:46.255Z',
-    '2021-02-12T15:14:06.486Z',
+    '2023-10-02T14:43:31.074Z',
+    '2023-10-29T11:24:19.761Z',
+    '2023-11-15T10:45:23.907Z',
+    '2024-05-22T12:17:46.255Z',
+    '2024-09-12T15:14:06.486Z',
   ],
   currency: 'USD',
   locale: 'en-US',
@@ -119,6 +119,28 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// CREATE DATA
+
+const transactionsDates = function (date1, date2) {
+  const transYear = `${date1.getFullYear()}`;
+  const transMonth = `${date1.getMonth() + 1}`.padStart(2, '0');
+  const transDay = `${date1.getDate()}`.padStart(2, '0');
+  const daysPassed = Math.abs(Math.round((date2 - date1) / 86400000));
+  console.log(daysPassed);
+
+  if (!daysPassed) {
+    return 'Cегодня';
+  } else if (daysPassed === 1) {
+    return 'Вчера';
+  } else if (daysPassed <= 4) {
+    return `${daysPassed} дня назад`;
+  } else if (daysPassed <= 7) {
+    return `${daysPassed} дней назад`;
+  } else {
+    return `${transDay}/${transMonth}/${transYear}`;
+  }
+};
+
 // DISPLAY TRANSACTIONS
 
 // clear transactions box
@@ -144,20 +166,20 @@ const displayTransactions = function (account) {
       transactionSortBy = account.transactions.slice().sort((x, y) => y - x);
       break;
   }
-  console.log(transactionSortBy);
   transactionSortBy.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
     const transDate = new Date(account.transactionsDates[index]);
-    const transYear = `${transDate.getFullYear()}`;
-    const transMonth = `${transDate.getMonth() + 1}`.padStart(2, '0');
-    const transDay = `${transDate.getDate()}`.padStart(2, '0');
+    console.log(transDate);
 
     const transactionRow = `
         <div class="transactions__row">
           <div class="transactions__type transactions__type--${transType}">
             ${index + 1} ${transType}
           </div>
-          <div class="transactions__date">${transDay}/${transMonth}/${transYear}</div>
+          <div class="transactions__date">${transactionsDates(
+            transDate,
+            new Date()
+          )}</div>
           <div class="transactions__value">${trans.toFixed(2)}$</div>
         </div>`;
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
