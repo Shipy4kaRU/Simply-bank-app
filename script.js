@@ -119,14 +119,23 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// SET DATA
+
+const date = new Date();
+const year = `${date.getFullYear()}`;
+const month = `${date.getMonth() + 1}`.padStart(2, '0');
+const day = `${date.getDate()}`.padStart(2, '0');
+
+labelDate.innerHTML = `${day}/${month}/${year}`;
+
 // DISPLAY TRANSACTIONS
 
+// clear transactions box
 const clearTrasaction = function () {
   containerTransactions.innerHTML = '';
 };
 
 // transactions sort by: -1: to Low, 0: No sort, 1: to Up
-
 let areSorted = 0;
 
 const displayTransactions = function (transactions) {
@@ -261,6 +270,11 @@ const logIn = function (e) {
 };
 
 btnLogin.addEventListener('click', logIn);
+
+//always log in for developing
+currentUser = account1;
+updateUserUI();
+containerApp.style.opacity = '1';
 
 // TRANSFERS
 
