@@ -285,7 +285,6 @@ btnLoan.addEventListener('click', askLoan);
 
 btnSort.addEventListener('click', function () {
   areSorted >= 1 ? (areSorted = -1) : areSorted++;
-  console.log(areSorted);
   switch (areSorted) {
     case 1:
       btnSort.innerHTML = '&downarrow; СОРТИРОВКА';
