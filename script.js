@@ -1,6 +1,6 @@
 'use strict';
 
-// Simply Bank App
+// SIMPLY BANK APP
 
 const account1 = {
   userName: 'Cecil Ireland',
@@ -119,15 +119,6 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-// SET DATA
-
-const date = new Date();
-const year = `${date.getFullYear()}`;
-const month = `${date.getMonth() + 1}`.padStart(2, '0');
-const day = `${date.getDate()}`.padStart(2, '0');
-
-labelDate.innerHTML = `${day}/${month}/${year}`;
-
 // DISPLAY TRANSACTIONS
 
 // clear transactions box
@@ -135,34 +126,38 @@ const clearTrasaction = function () {
   containerTransactions.innerHTML = '';
 };
 
-// transactions sort by: -1: to Low, 0: No sort, 1: to Up
+// transactions sort by: -1: to Low; 0: No sort; 1: to Up
 let areSorted = 0;
 
-const displayTransactions = function (transactions) {
+const displayTransactions = function (account) {
   let transactionSortBy;
   clearTrasaction();
 
   switch (areSorted) {
     case -1:
-      transactionSortBy = transactions.slice().sort((x, y) => x - y);
+      transactionSortBy = account.transactions.slice().sort((x, y) => x - y);
       break;
     case 0:
-      transactionSortBy = transactions;
+      transactionSortBy = account.transactions;
       break;
     case 1:
-      transactionSortBy = transactions.slice().sort((x, y) => y - x);
+      transactionSortBy = account.transactions.slice().sort((x, y) => y - x);
       break;
   }
 
   transactionSortBy.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
+    const transDate = new Date(account.transactionsDates[index]);
+    const transYear = `${transDate.getFullYear()}`;
+    const transMonth = `${transDate.getMonth() + 1}`.padStart(2, '0');
+    const transDay = `${transDate.getDate()}`.padStart(2, '0');
 
     const transactionRow = `
         <div class="transactions__row">
           <div class="transactions__type transactions__type--${transType}">
             ${index + 1} ${transType}
           </div>
-          <div class="transactions__date">2 дня назад</div>
+          <div class="transactions__date">${transDay}/${transMonth}/${transYear}</div>
           <div class="transactions__value">${trans.toFixed(2)}$</div>
         </div>`;
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
@@ -225,8 +220,14 @@ const displayPercent = function (acc) {
 // UPDATE USER UI
 
 const updateUserUI = function () {
+  // set data
+  const date = new Date();
+  const year = `${date.getFullYear()}`;
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  labelDate.innerHTML = `${day}/${month}/${year}`;
   //display total transactions
-  displayTransactions(currentUser.transactions);
+  displayTransactions(currentUser);
   // display balance
   displayBalance(currentUser);
   // display deposits, withdraws, percents
@@ -271,11 +272,6 @@ const logIn = function (e) {
 
 btnLogin.addEventListener('click', logIn);
 
-//always log in for developing
-currentUser = account1;
-updateUserUI();
-containerApp.style.opacity = '1';
-
 // TRANSFERS
 
 const transferTo = function (e) {
@@ -295,6 +291,8 @@ const transferTo = function (e) {
   ) {
     currentUser.transactions.push(-trimTransferAmount);
     trimTransferAccountTo.transactions.push(trimTransferAmount);
+    currentUser.transactionsDates.push(new Date().toISOString());
+    trimTransferAccountTo.transactionsDates.push(new Date().toISOString());
     updateUserUI();
   }
 };
@@ -340,6 +338,7 @@ const askLoan = function (e) {
     currentUser.isLoan === false
   ) {
     currentUser.transactions.push(loanValue);
+    currentUser.transactionsDates.push(new Date().toISOString());
     updateUserUI();
     currentUser.isLoan = true;
   }
