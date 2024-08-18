@@ -144,7 +144,7 @@ const displayTransactions = function (account) {
       transactionSortBy = account.transactions.slice().sort((x, y) => y - x);
       break;
   }
-
+  console.log(transactionSortBy);
   transactionSortBy.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
     const transDate = new Date(account.transactionsDates[index]);
@@ -361,5 +361,5 @@ btnSort.addEventListener('click', function () {
       btnSort.innerHTML = '&uparrow; СОРТИРОВКА';
       break;
   }
-  displayTransactions(currentUser.transactions);
+  displayTransactions(currentUser);
 });
