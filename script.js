@@ -260,17 +260,22 @@ btnClose.addEventListener('click', closeAccount);
 
 // ASK LOANS
 
+accounts.forEach(account => (account.isLoan = false));
+
 const askLoan = function (e) {
   e.preventDefault();
   const loanValue = Number(inputLoanAmount.value);
   inputLoanAmount.value = '';
-  console.log(loanValue);
   if (
     loanValue > 0 &&
-    currentUser.transactions.some(transaction => transaction >= loanValue / 10)
+    currentUser.transactions.some(
+      transaction => transaction >= loanValue / 10
+    ) &&
+    currentUser.isLoan === false
   ) {
     currentUser.transactions.push(loanValue);
     updateUserUI();
+    currentUser.isLoan = true;
   }
 };
 
