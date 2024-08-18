@@ -4,7 +4,7 @@
 
 const account1 = {
   userName: 'Cecil Ireland',
-  transactions: [500, 250, -300, 5000, -850, -110, -170, 1100],
+  transactions: [500.25, 250, -300.89, 5000, -850.1, -110.08, -170, 1100],
   interest: 1.5,
   pin: 1111,
 };
@@ -100,7 +100,7 @@ const displayTransactions = function (transactions) {
             ${index + 1} ${transType}
           </div>
           <div class="transactions__date">2 дня назад</div>
-          <div class="transactions__value">${trans}$</div>
+          <div class="transactions__value">${trans.toFixed(2)}$</div>
         </div>`;
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
   });
@@ -126,7 +126,7 @@ const displayBalance = function (acc) {
   acc.balance = acc.transactions.reduce((accum, trans) => {
     return accum + trans;
   }, 0);
-  labelBalance.textContent = `${acc.balance}$`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}$`;
 };
 
 // DEPOSITS
@@ -135,7 +135,7 @@ const displayDeposit = function (acc) {
   const totalDeposits = acc.transactions
     .filter(trans => trans > 0)
     .reduce((acc, trans) => acc + trans, 0);
-  labelSumIn.textContent = `${totalDeposits}$`;
+  labelSumIn.textContent = `${totalDeposits.toFixed(2)}$`;
 };
 
 // WITHDRAWS
@@ -144,7 +144,7 @@ const displayWithdraws = function (acc) {
   const totalWithdraws = acc.transactions
     .filter(trans => trans < 0)
     .reduce((acc, trans) => acc + Math.abs(trans), 0);
-  labelSumOut.textContent = `-${totalWithdraws}$`;
+  labelSumOut.textContent = `-${totalWithdraws.toFixed(2)}$`;
 };
 
 // PERCENT
@@ -156,9 +156,7 @@ const displayPercent = function (acc) {
       (accum, trans) => (accum = accum + (trans * acc.interest) / 100),
       0
     );
-  labelSumPercent.textContent = `${
-    Math.round(totalPercent * Math.pow(10, 2)) / Math.pow(10, 2)
-  }$`;
+  labelSumPercent.textContent = `${+totalPercent.toFixed(2)}$`;
 };
 
 // UPDATE USER UI
@@ -181,7 +179,7 @@ let currentUser;
 const logIn = function (e) {
   e.preventDefault();
   const trimUserLogin = inputLoginUsername.value.trim();
-  const UserPin = Number(inputLoginPin.value);
+  const UserPin = +inputLoginPin.value;
   const logUser = accounts.find(account => account.nickname === trimUserLogin);
   if (logUser?.pin === UserPin) {
     currentUser = logUser;
@@ -215,7 +213,7 @@ btnLogin.addEventListener('click', logIn);
 const transferTo = function (e) {
   e.preventDefault();
   const trimTransferNicknameTo = inputTransferTo.value.trim();
-  const trimTransferAmount = Number(inputTransferAmount.value.trim());
+  const trimTransferAmount = +inputTransferAmount.value.trim();
   const trimTransferAccountTo = accounts.find(
     account => account.nickname === trimTransferNicknameTo
   );
@@ -240,7 +238,7 @@ btnTransfer.addEventListener('click', transferTo);
 const closeAccount = function (e) {
   e.preventDefault();
   const trimCloseNickname = inputCloseUsername.value;
-  const trimClosePin = Number(inputClosePin.value.trim());
+  const trimClosePin = +inputClosePin.value.trim();
   inputCloseUsername.value = '';
   inputClosePin.value = '';
   if (
@@ -264,7 +262,7 @@ accounts.forEach(account => (account.isLoan = false));
 
 const askLoan = function (e) {
   e.preventDefault();
-  const loanValue = Number(inputLoanAmount.value);
+  const loanValue = Math.trunc(inputLoanAmount.value);
   inputLoanAmount.value = '';
   if (
     loanValue > 0 &&
