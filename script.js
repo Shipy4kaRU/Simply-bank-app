@@ -126,7 +126,6 @@ const transactionsDates = function (date1, date2) {
   const transMonth = `${date1.getMonth() + 1}`.padStart(2, '0');
   const transDay = `${date1.getDate()}`.padStart(2, '0');
   const daysPassed = Math.abs(Math.round((date2 - date1) / 86400000));
-  console.log(daysPassed);
 
   if (!daysPassed) {
     return 'Cегодня';
@@ -137,7 +136,7 @@ const transactionsDates = function (date1, date2) {
   } else if (daysPassed <= 7) {
     return `${daysPassed} дней назад`;
   } else {
-    return `${transDay}/${transMonth}/${transYear}`;
+    return new Intl.DateTimeFormat(currentUser.locale).format(date1);
   }
 };
 
@@ -169,7 +168,6 @@ const displayTransactions = function (account) {
   transactionSortBy.forEach(function (trans, index) {
     const transType = trans > 0 ? 'deposit' : 'withdrawal';
     const transDate = new Date(account.transactionsDates[index]);
-    console.log(transDate);
 
     const transactionRow = `
         <div class="transactions__row">
@@ -242,12 +240,22 @@ const displayPercent = function (acc) {
 // UPDATE USER UI
 
 const updateUserUI = function () {
-  // set data
+  // set data Intl API
   const date = new Date();
-  const year = `${date.getFullYear()}`;
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const day = `${date.getDate()}`.padStart(2, '0');
-  labelDate.innerHTML = `${day}/${month}/${year}`;
+  const options = {
+    hour: 'numeric',
+    minute: 'numeric',
+    day: 'numeric',
+    month: '2-digit',
+    year: 'numeric',
+    weekday: 'long',
+  };
+  labelDate.textContent = new Intl.DateTimeFormat(
+    currentUser.locale,
+    options
+  ).format(date);
+  labelDate.textContent =
+    labelDate.textContent[0].toUpperCase() + labelDate.textContent.slice(1);
   //display total transactions
   displayTransactions(currentUser);
   // display balance
