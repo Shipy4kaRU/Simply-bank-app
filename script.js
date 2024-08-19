@@ -379,10 +379,12 @@ const askLoan = function (e) {
     ) &&
     currentUser.isLoan === false
   ) {
-    currentUser.transactions.push(loanValue);
-    currentUser.transactionsDates.push(new Date().toISOString());
-    updateUserUI();
-    currentUser.isLoan = true;
+    setTimeout(function () {
+      currentUser.transactions.push(loanValue);
+      currentUser.transactionsDates.push(new Date().toISOString());
+      updateUserUI();
+      currentUser.isLoan = true;
+    }, 1750);
   }
 };
 
