@@ -140,6 +140,16 @@ const transactionsDates = function (date1, date2) {
   }
 };
 
+// CREATE Intl Number API
+
+const formatTransactionNumber = function (value) {
+  const options = {
+    style: 'currency',
+    currency: currentUser.currency,
+  };
+  return Intl.NumberFormat(currentUser.locale, options).format(value);
+};
+
 // DISPLAY TRANSACTIONS
 
 // clear transactions box
@@ -178,7 +188,9 @@ const displayTransactions = function (account) {
             transDate,
             new Date()
           )}</div>
-          <div class="transactions__value">${trans.toFixed(2)}$</div>
+          <div class="transactions__value">${formatTransactionNumber(
+            trans
+          )}</div>
         </div>`;
     containerTransactions.insertAdjacentHTML('afterbegin', transactionRow);
   });
@@ -204,7 +216,7 @@ const displayBalance = function (acc) {
   acc.balance = acc.transactions.reduce((accum, trans) => {
     return accum + trans;
   }, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}$`;
+  labelBalance.textContent = `${formatTransactionNumber(acc.balance)}`;
 };
 
 // DEPOSITS
@@ -213,7 +225,7 @@ const displayDeposit = function (acc) {
   const totalDeposits = acc.transactions
     .filter(trans => trans > 0)
     .reduce((acc, trans) => acc + trans, 0);
-  labelSumIn.textContent = `${totalDeposits.toFixed(2)}$`;
+  labelSumIn.textContent = `${formatTransactionNumber(totalDeposits)}`;
 };
 
 // WITHDRAWS
@@ -222,7 +234,7 @@ const displayWithdraws = function (acc) {
   const totalWithdraws = acc.transactions
     .filter(trans => trans < 0)
     .reduce((acc, trans) => acc + Math.abs(trans), 0);
-  labelSumOut.textContent = `-${totalWithdraws.toFixed(2)}$`;
+  labelSumOut.textContent = `-${formatTransactionNumber(totalWithdraws)}`;
 };
 
 // PERCENT
@@ -234,7 +246,7 @@ const displayPercent = function (acc) {
       (accum, trans) => (accum = accum + (trans * acc.interest) / 100),
       0
     );
-  labelSumPercent.textContent = `${+totalPercent.toFixed(2)}$`;
+  labelSumPercent.textContent = `${formatTransactionNumber(totalPercent)}`;
 };
 
 // UPDATE USER UI
