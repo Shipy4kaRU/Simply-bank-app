@@ -196,6 +196,45 @@ const displayTransactions = function (account) {
   });
 };
 
+// CREATE LOG OUT TIMER
+let isTimer = 0;
+let startTimer = 0;
+
+const startLogOutTimer = function () {
+  let time = 300;
+  startTimer = setTimeout(function () {
+    const timerFunction = function () {
+      const minute = String(Math.trunc(time / 60)).padStart(2, '0');
+      const seconds = String(time % 60).padStart(2, '0');
+      labelTimer.textContent = `${minute}:${seconds}`;
+      if (time <= 0) {
+        containerApp.style.opacity = 0;
+        clearInterval(isTimer);
+        labelWelcome.textContent = 'Войдите в свой аккаунт';
+        areSorted = 0;
+        btnSort.innerHTML = 'СОРТИРОВКА ПО ДАТЕ';
+        labelTimer.textContent = `05:00`;
+      }
+      time--;
+    };
+    timerFunction();
+    isTimer = setInterval(timerFunction, 1000);
+  }, 4000);
+};
+
+const resetTimer = function () {
+  if (startTimer) {
+    clearInterval(isTimer);
+    clearTimeout(startTimer);
+  }
+  startLogOutTimer();
+};
+
+document.addEventListener('mousemove', resetTimer);
+document.addEventListener('keypress', resetTimer);
+document.addEventListener('scroll', resetTimer);
+document.addEventListener('click', resetTimer);
+
 // CREATE THE NICKNAME OF USER
 
 const createNicknames = function (accs) {
@@ -268,6 +307,8 @@ const updateUserUI = function () {
   ).format(date);
   labelDate.textContent =
     labelDate.textContent[0].toUpperCase() + labelDate.textContent.slice(1);
+  // start logout timer
+  resetTimer();
   //display total transactions
   displayTransactions(currentUser);
   // display balance
